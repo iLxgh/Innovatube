@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
-import { AuthProvider } from "@/lib/auth-context";
-import { Toaster } from "@/components/ui/sonner";
+import Providers from "@/components/Providers";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -25,19 +23,12 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const recaptchaKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "";
-
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <GoogleReCaptchaProvider reCaptchaKey={recaptchaKey}>
-          <AuthProvider>
-            {children}
-            <Toaster />
-          </AuthProvider>
-        </GoogleReCaptchaProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
