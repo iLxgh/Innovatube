@@ -3,6 +3,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import connectDB from "./config/database.js";
 import authRoutes from "./routes/auth.routes.js";
+import youtubeRoutes from "./routes/youtube.routes.js";
+import favoritesRoutes from "./routes/favorites.routes.js";
 
 dotenv.config();
 
@@ -17,6 +19,8 @@ app.use(express.json());
 
 // Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/youtube", youtubeRoutes);
+app.use("/api/favorites", favoritesRoutes);
 
 // Health check
 app.get("/health", (req, res) => {
