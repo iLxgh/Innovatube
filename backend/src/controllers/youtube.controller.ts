@@ -1,6 +1,6 @@
 import type { Response } from "express";
-import type { AuthRequest } from "../middleware/auth";
-import { searchVideos, getVideoById } from "../services/youtube.service";
+import type { AuthRequest } from "../middleware/auth.js";
+import { searchVideos, getVideoById } from "../services/youtube.service.js";
 
 export const search = async (req: AuthRequest, res: Response): Promise<void> => {
     try {

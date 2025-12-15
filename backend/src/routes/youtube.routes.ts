@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { search, getVideo } from "../controllers/youtube.controller";
-import { authenticate } from "../middleware/auth";
-import { apiLimiter } from "../middleware/rateLimiter";
+import { search, getVideo } from "../controllers/youtube.controller.js";
+import { authenticate } from "../middleware/auth.js";
+import { apiLimiter } from "../middleware/rateLimiter.js";
 
 const router = Router();
 

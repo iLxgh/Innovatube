@@ -1,6 +1,6 @@
 import type { Response } from "express";
-import type { AuthRequest } from "../middleware/auth";
-import { Favorite } from "../models/Favorite";
+import type { AuthRequest } from "../middleware/auth.js";
+import { Favorite } from "../models/Favorite.js";
 
 export const addFavorite = async (req: AuthRequest, res: Response): Promise<void> => {
     try {

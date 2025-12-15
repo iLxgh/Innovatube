@@ -2,9 +2,9 @@ import type { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import * as crypto from "crypto";
-import { User } from "../models/User";
-import { verifyRecaptcha } from "../utils/recaptcha";
-import sendEmail from "../utils/sendEmail";
+import { User } from "../models/User.js";
+import { verifyRecaptcha } from "../utils/recaptcha.js";
+import sendEmail from "../utils/sendEmail.js";
 
 export const register = async (req: Request, res: Response): Promise<void> => {
     try {

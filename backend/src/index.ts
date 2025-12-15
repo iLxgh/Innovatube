@@ -1,10 +1,10 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import connectDB from "./config/database";
-import authRoutes from "./routes/auth.routes";
-import youtubeRoutes from "./routes/youtube.routes";
-import favoritesRoutes from "./routes/favorites.routes";
+import connectDB from "./config/database.js";
+import authRoutes from "./routes/auth.routes.js";
+import youtubeRoutes from "./routes/youtube.routes.js";
+import favoritesRoutes from "./routes/favorites.routes.js";
 
 dotenv.config();
 

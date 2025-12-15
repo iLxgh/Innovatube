@@ -116,7 +116,7 @@ NEXT_PUBLIC_RECAPTCHA_SITE_KEY=your-recaptcha-site-key
 The easiest way to run the application is using Docker Compose.
 
 1.  Ensure you have **Docker** and **Docker Compose** installed.
-2.  Set up your `.env` variables in `docker-compose.yml` or create a root `.env` file if preferred (the compose file currently uses inline defaults for dev).
+2.  Create a `.env` file in the root directory (Project root) containing the necessary environment variables. This file will be used by Docker Compose.
 3.  Run the following command:
 
 ```bash
