@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { addFavorite, removeFavorite, getFavorites, checkFavorite } from "../controllers/favorites.controller.js";
-import { authenticate } from "../middleware/auth.js";
-import { apiLimiter } from "../middleware/rateLimiter.js";
+import { addFavorite, removeFavorite, getFavorites, checkFavorite } from "../controllers/favorites.controller";
+import { authenticate } from "../middleware/auth";
+import { apiLimiter } from "../middleware/rateLimiter";
 
 const router = Router();
 

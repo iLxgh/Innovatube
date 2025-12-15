@@ -46,7 +46,6 @@ export const searchVideos = async (
 
         const videoIds = response.data.items.map((item: any) => item.id.videoId).join(",");
 
-        // Get additional video details (statistics)
         const detailsResponse = await axios.get(`${YOUTUBE_API_BASE}/videos`, {
             params: {
                 key: apiKey,

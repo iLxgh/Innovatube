@@ -6,7 +6,7 @@ export const verifyRecaptcha = async (token: string): Promise<boolean> => {
         
         if (!secretKey) {
             console.warn("⚠️  RECAPTCHA_SECRET_KEY not configured, skipping verification");
-            return true; // Allow in development if not configured
+            return true;
         }
 
         const response = await axios.post(

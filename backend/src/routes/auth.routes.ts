@@ -1,12 +1,12 @@
 import { Router } from "express";
-import { register, login, forgotPassword, resetPassword } from "../controllers/auth.controller.js";
-import { validate } from "../middleware/validate.js";
-import { registerSchema, loginSchema, forgotPasswordSchema, resetPasswordSchema } from "../validators/auth.validator.js";
-import { authLimiter } from "../middleware/rateLimiter.js";
+import { register, login, forgotPassword, resetPassword } from "../controllers/auth.controller";
+import { validate } from "../middleware/validate";
+import { registerSchema, loginSchema, forgotPasswordSchema, resetPasswordSchema } from "../validators/auth.validator";
+import { authLimiter } from "../middleware/rateLimiter";
 
 const router = Router();
 
-// Apply rate limiting to all auth routes
+
 router.use(authLimiter);
 
 // POST /api/auth/register

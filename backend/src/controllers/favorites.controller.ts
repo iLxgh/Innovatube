@@ -1,7 +1,6 @@
 import type { Response } from "express";
-import type { AuthRequest } from "../middleware/auth.js";
-import { Favorite } from "../models/Favorite.js";
-import { getVideoById } from "../services/youtube.service.js";
+import type { AuthRequest } from "../middleware/auth";
+import { Favorite } from "../models/Favorite";
 
 export const addFavorite = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
@@ -16,7 +15,6 @@ export const addFavorite = async (req: AuthRequest, res: Response): Promise<void
             return;
         }
 
-        // Check if already favorited
         const existing = await Favorite.findOne({ userId, videoId });
         
         if (existing) {
@@ -104,7 +102,6 @@ export const getFavorites = async (req: AuthRequest, res: Response): Promise<voi
 
         let query: any = { userId };
 
-        // Add search filter if provided
         if (search && typeof search === "string") {
             query.$or = [
                 { videoTitle: { $regex: search, $options: "i" } },

@@ -1,7 +1,6 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
-import api from "./api";
 
 interface User {
   id: string;
@@ -28,7 +27,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Load user and token from localStorage on mount
     const storedToken = localStorage.getItem("token");
     const storedUser = localStorage.getItem("user");
 

@@ -68,7 +68,6 @@ export default function DashboardPage() {
     }
   };
 
-  // Debounce search
   useEffect(() => {
     if (searchQuery.length > 2) {
       const timer = setTimeout(() => {

@@ -6,6 +6,8 @@ export interface IUser extends Document {
     username: string;
     email: string;
     password: string;
+    resetPasswordToken?: string;
+    resetPasswordExpire?: Date;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -49,13 +51,14 @@ const userSchema = new Schema<IUser>(
             required: [true, "Password is required"],
             minlength: [6, "Password must be at least 6 characters"],
         },
+        resetPasswordToken: String,
+        resetPasswordExpire: Date,
     },
     {
         timestamps: true,
     }
 );
 
-// Index for faster queries
 userSchema.index({ email: 1 });
 userSchema.index({ username: 1 });
 

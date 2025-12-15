@@ -37,7 +37,6 @@ export default function VideoCard({
       const response = await api.get(`/favorites/check/${id}`);
       setIsFavorite(response.data.isFavorite);
     } catch (error) {
-      // Silently fail
     }
   };
 

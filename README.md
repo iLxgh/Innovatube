@@ -11,7 +11,8 @@ A full-stack web application that allows users to search YouTube videos, save fa
 - ✅ JWT-based authentication
 - ✅ Password encryption with bcrypt
 - ✅ Google reCAPTCHA v3 integration
-- ✅ Password recovery (placeholder)
+- ✅ Password recovery via secure token (SMTP / dev console fallback)
+
 
 ### Video Search
 
@@ -159,44 +160,30 @@ The frontend will run on `http://localhost:3000`
 - `GET /api/favorites?search=query` - List favorites with optional search
 - `GET /api/favorites/check/:videoId` - Check if video is favorited
 
-## 🎨 Project Structure
+## 🔑 Password Reset Flow
 
-```
-InnovaTube/
-├── backend/
-│   ├── src/
-│   │   ├── config/          # Database configuration
-│   │   ├── controllers/     # Route controllers
-│   │   ├── middleware/      # Auth, validation, rate limiting
-│   │   ├── models/          # Mongoose models
-│   │   ├── routes/          # API routes
-│   │   ├── services/        # YouTube API service
-│   │   ├── utils/           # Utility functions
-│   │   ├── validators/      # Zod schemas
-│   │   └── index.ts         # Entry point
-│   ├── .env.example
-│   └── package.json
-│
-└── frontend/
-    ├── app/
-    │   ├── dashboard/       # Video search page
-    │   ├── favorites/       # Favorites page
-    │   ├── login/           # Login page
-    │   ├── register/        # Registration page
-    │   ├── layout.tsx       # Root layout with providers
-    │   └── page.tsx         # Landing page
-    ├── components/
-    │   ├── ui/              # Shadcn/ui components
-    │   ├── Navbar.tsx       # Navigation bar
-    │   ├── ProtectedRoute.tsx
-    │   └── VideoCard.tsx    # Video display card
-    ├── lib/
-    │   ├── api.ts           # Axios client
-    │   ├── auth-context.tsx # Auth state management
-    │   └── utils.ts         # Utility functions
-    ├── .env.example
-    └── package.json
-```
+The application includes a secure password reset mechanism based on time-limited tokens.
+
+### How it works
+
+1. The user requests a password reset by providing their email.
+2. If the email exists, the backend generates a random reset token.
+3. The token is stored **hashed** in the database along with an expiration time (10 minutes).
+4. A reset link is generated using the frontend URL and sent via email.
+5. The user sets a new password using the token.
+6. After a successful reset:
+   - The token is invalidated
+   - The password is securely hashed
+   - A new JWT is issued automatically
+
+### Email Delivery
+
+Email sending is handled through an SMTP configuration defined via environment variables.
+
+For development environments **without SMTP credentials**, the reset link is logged directly to the backend console.  
+This allows the full reset flow to be tested locally without relying on external email services.
+
+This approach keeps the application production-ready while maintaining a smooth local development experience.
 
 ## 🔐 Environment Variables
 
@@ -212,6 +199,19 @@ InnovaTube/
 | `YOUTUBE_API_KEY`      | YouTube Data API key      | Yes      |
 | `FRONTEND_URL`         | Frontend URL for CORS     | Yes      |
 
+### Optional (SMTP Configuration)
+
+| Variable        | Description                     | Required |
+| --------------- | ------------------------------- | -------- |
+| `SMTP_HOST`     | SMTP server host                | No       |
+| `SMTP_PORT`     | SMTP server port                | No       |
+| `SMTP_USER`     | SMTP username                   | No       |
+| `SMTP_PASS`     | SMTP password                   | No       |
+| `FROM_NAME`     | Email sender name               | No       |
+| `FROM_EMAIL`    | Email sender address            | No       |
+
+If SMTP variables are not provided, password reset emails will be logged to the backend console instead.
+
 ### Frontend (.env.local)
 
 | Variable                         | Description        | Required |
@@ -219,58 +219,9 @@ InnovaTube/
 | `NEXT_PUBLIC_API_URL`            | Backend API URL    | Yes      |
 | `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` | reCAPTCHA site key | Yes      |
 
-## 🧪 Testing
+## Thanks!
 
-### Manual Testing Checklist
+Thanks for checking out my project! If you have any questions or need assistance, feel free to reach out.
 
-**Authentication:**
 
-- [ ] Register new user with all validations
-- [ ] Login with username
-- [ ] Login with email
-- [ ] Logout functionality
-- [ ] Protected routes redirect to login
 
-**Video Search:**
-
-- [ ] Search for videos
-- [ ] View video thumbnails and details
-- [ ] Navigate to YouTube video
-- [ ] Pagination (next/previous)
-- [ ] Debounced search
-
-**Favorites:**
-
-- [ ] Add video to favorites
-- [ ] Remove video from favorites
-- [ ] View favorites list
-- [ ] Search within favorites
-- [ ] Favorite status persists after logout/login
-
-## 📝 Git Commit History
-
-1. `feat: configure backend environment and implement authentication system`
-2. `feat: integrate YouTube API and implement favorites system`
-3. `feat: create authentication UI with Shadcn/ui`
-4. `fix: correct homepage JSX structure and gradient classes`
-5. `feat: build video search dashboard and favorites UI`
-
-## 🎯 Future Enhancements
-
-- [ ] Docker containerization
-- [ ] Deployment to production (Vercel + Railway/Render)
-- [ ] Email verification for registration
-- [ ] Password reset via email
-- [ ] Video playlists
-- [ ] Watch history
-- [ ] Dark mode
-- [ ] Video recommendations
-- [ ] Social sharing
-
-## 📄 License
-
-This project is created for educational purposes.
-
-## 👨‍💻 Author
-
-Created as part of the InnovaTube coding challenge.

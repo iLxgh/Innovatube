@@ -1,14 +1,15 @@
 import type { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { User } from "../models/User.js";
-import { verifyRecaptcha } from "../utils/recaptcha.js";
+import * as crypto from "crypto";
+import { User } from "../models/User";
+import { verifyRecaptcha } from "../utils/recaptcha";
+import sendEmail from "../utils/sendEmail";
 
 export const register = async (req: Request, res: Response): Promise<void> => {
     try {
         const { firstName, lastName, username, email, password, recaptchaToken } = req.body;
 
-        // Verify reCAPTCHA
         const isHuman = await verifyRecaptcha(recaptchaToken);
         if (!isHuman) {
             res.status(400).json({
@@ -18,7 +19,6 @@ export const register = async (req: Request, res: Response): Promise<void> => {
             return;
         }
 
-        // Check if user already exists
         const existingUser = await User.findOne({
             $or: [{ email }, { username }],
         });
@@ -33,10 +33,8 @@ export const register = async (req: Request, res: Response): Promise<void> => {
             return;
         }
 
-        // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Create user
         const user = await User.create({
             firstName,
             lastName,
@@ -45,7 +43,6 @@ export const register = async (req: Request, res: Response): Promise<void> => {
             password: hashedPassword,
         });
 
-        // Generate JWT token
         const jwtSecret = process.env.JWT_SECRET;
         if (!jwtSecret) {
             throw new Error("JWT_SECRET is not defined");
@@ -54,7 +51,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
         const token = jwt.sign(
             { userId: user._id },
             jwtSecret,
-            { expiresIn: process.env.JWT_EXPIRES_IN || "24h" }
+            { expiresIn: (process.env.JWT_EXPIRES_IN || "24h") as any }
         );
 
         res.status(201).json({
@@ -85,7 +82,6 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     try {
         const { usernameOrEmail, password } = req.body;
 
-        // Find user by username or email
         const user = await User.findOne({
             $or: [
                 { email: usernameOrEmail.toLowerCase() },
@@ -101,7 +97,6 @@ export const login = async (req: Request, res: Response): Promise<void> => {
             return;
         }
 
-        // Verify password
         const isPasswordValid = await bcrypt.compare(password, user.password);
 
         if (!isPasswordValid) {
@@ -112,7 +107,6 @@ export const login = async (req: Request, res: Response): Promise<void> => {
             return;
         }
 
-        // Generate JWT token
         const jwtSecret = process.env.JWT_SECRET;
         if (!jwtSecret) {
             throw new Error("JWT_SECRET is not defined");
@@ -154,17 +148,49 @@ export const forgotPassword = async (req: Request, res: Response): Promise<void>
 
         const user = await User.findOne({ email: email.toLowerCase() });
 
-        // Always return success to prevent email enumeration
-        res.status(200).json({
-            success: true,
-            message: "If the email exists, a password reset link has been sent",
-        });
+        if (!user) {
+             res.status(200).json({
+                success: true,
+                message: "If the email exists, a password reset link has been sent",
+            });
+            return;
+        }
 
-        // TODO: Implement email sending with reset token
-        // For now, just log it
-        if (user) {
-            console.log(`Password reset requested for user: ${user.email}`);
-            // In production, generate a reset token and send email
+        const resetToken = crypto.randomBytes(20).toString("hex");
+
+        user.resetPasswordToken = crypto
+            .createHash("sha256")
+            .update(resetToken)
+            .digest("hex");
+
+        user.resetPasswordExpire = new Date(Date.now() + 10 * 60 * 1000);
+
+        await user.save();
+
+        const resetUrl = `${process.env.FRONTEND_URL || "http://localhost:3000"}/reset-password/${resetToken}`;
+
+        const message = `You are receiving this email because you has requested the reset of a password. Please make a PUT request to: \n\n ${resetUrl}`;
+
+        try {
+            await sendEmail({
+                email: user.email,
+                subject: "Password Reset Token",
+                message,
+            });
+
+            res.status(200).json({
+                success: true,
+                message: "If the email exists, a password reset link has been sent",
+            });
+        } catch (error) {
+            (user as any).resetPasswordToken = undefined;
+            (user as any).resetPasswordExpire = undefined;
+            await user.save();
+
+            res.status(500).json({
+                success: false,
+                message: "Email could not be sent",
+            });
         }
     } catch (error: any) {
         console.error("Forgot password error:", error);
@@ -179,11 +205,53 @@ export const resetPassword = async (req: Request, res: Response): Promise<void> 
     try {
         const { token, password } = req.body;
 
-        // TODO: Implement token verification and password reset
-        // For now, return not implemented
-        res.status(501).json({
-            success: false,
-            message: "Password reset not fully implemented yet",
+        const resetPasswordToken = crypto
+            .createHash("sha256")
+            .update(token)
+            .digest("hex");
+
+        const user = await User.findOne({
+            resetPasswordToken,
+            resetPasswordExpire: { $gt: Date.now() },
+        });
+
+        if (!user) {
+            res.status(400).json({
+                success: false,
+                message: "Invalid token",
+            });
+            return;
+        }
+
+        user.password = await bcrypt.hash(password, 10);
+        (user as any).resetPasswordToken = undefined;
+        (user as any).resetPasswordExpire = undefined;
+
+        await user.save();
+
+        const jwtSecret = process.env.JWT_SECRET;
+        if (!jwtSecret) {
+             throw new Error("JWT_SECRET is not defined");
+        }
+        
+        const authToken = jwt.sign(
+            { userId: user._id },
+            jwtSecret,
+            { expiresIn: (process.env.JWT_EXPIRES_IN || "24h") as any }
+        );
+
+        res.status(200).json({
+            success: true,
+            data: {
+                token: authToken,
+                 user: {
+                    id: user._id,
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    username: user.username,
+                    email: user.email,
+                },
+            },
         });
     } catch (error: any) {
         console.error("Reset password error:", error);

@@ -50,10 +50,7 @@ const favoriteSchema = new Schema<IFavorite>(
     }
 );
 
-// Compound index to ensure a user can't favorite the same video twice
 favoriteSchema.index({ userId: 1, videoId: 1 }, { unique: true });
-
-// Index for faster queries
 favoriteSchema.index({ userId: 1, addedAt: -1 });
 
 export const Favorite = mongoose.model<IFavorite>("Favorite", favoriteSchema);

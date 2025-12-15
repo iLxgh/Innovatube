@@ -58,11 +58,6 @@ export default function FavoritesPage() {
     }
   };
 
-  const handleFavoriteRemoved = () => {
-    // Refresh favorites list after a video is removed
-    fetchFavorites();
-  };
-
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-gray-50">
