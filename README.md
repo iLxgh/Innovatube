@@ -36,6 +36,12 @@ A full-stack web application that allows users to search YouTube videos, save fa
 - ✅ CORS configuration
 - ✅ Responsive design (mobile, tablet, desktop)
 
+### DevOps & Developer Experience
+
+- ✅ Fully containerized with Docker
+- ✅ Hot-reloading in development
+- ✅ Easy environment setup with Docker Compose
+
 ## 🛠️ Tech Stack
 
 ### Backend
@@ -58,6 +64,12 @@ A full-stack web application that allows users to search YouTube videos, save fa
 - **HTTP Client**: Axios
 - **State Management**: React Context API
 - **Notifications**: Sonner (toast notifications)
+
+### Infrastructure
+
+- **Containerization**: Docker
+- **Orchestration**: Docker Compose
+- **Environment**: Linux (Alpine) base images
 
 ## 📋 Prerequisites
 

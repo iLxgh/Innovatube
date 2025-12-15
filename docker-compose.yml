@@ -10,11 +10,6 @@ services:
       - JWT_EXPIRES_IN=24h
       - FRONTEND_URL=http://localhost:3000
       - YOUTUBE_API_KEY=${YOUTUBE_API_KEY}
-      # SMTP Configuration (Optional - Uncomment and set if needed)
-      # - SMTP_HOST=${SMTP_HOST}
-      # - SMTP_PORT=${SMTP_PORT}
-      # - SMTP_USER=${SMTP_USER}
-      # - SMTP_PASS=${SMTP_PASS}
     depends_on:
       - mongo
     networks:
