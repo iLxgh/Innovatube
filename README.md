@@ -42,6 +42,11 @@ A full-stack web application that allows users to search YouTube videos, save fa
 - ✅ Hot-reloading in development
 - ✅ Easy environment setup with Docker Compose
 
+### Deployment
+
+- ✅ Vercel for frontend deployment
+- ✅ Railway for backend and database deployment
+
 ## 🛠️ Tech Stack
 
 ### Backend
@@ -169,6 +174,12 @@ npm run dev
 ```
 
 The frontend will run on `http://localhost:3000`
+
+## 🌍 Live Demo
+
+- Frontend: https://innovatube-wine.vercel.app/
+- Backend API: https://innovatube-backend.up.railway.app/api
+- Health check: https://innovatube-backend.up.railway.app/health
 
 ## 📡 API Endpoints
 
