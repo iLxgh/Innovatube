@@ -13,7 +13,6 @@ A full-stack web application that allows users to search YouTube videos, save fa
 - ✅ Google reCAPTCHA v3 integration
 - ✅ Password recovery via secure token (SMTP / dev console fallback)
 
-
 ### Video Search
 
 - ✅ Search YouTube videos using YouTube Data API v3
@@ -112,6 +111,26 @@ NEXT_PUBLIC_RECAPTCHA_SITE_KEY=your-recaptcha-site-key
 
 ## 🚀 Running the Application
 
+### 🐳 Run with Docker (Recommended)
+
+The easiest way to run the application is using Docker Compose.
+
+1.  Ensure you have **Docker** and **Docker Compose** installed.
+2.  Set up your `.env` variables in `docker-compose.yml` or create a root `.env` file if preferred (the compose file currently uses inline defaults for dev).
+3.  Run the following command:
+
+```bash
+docker-compose up --build
+```
+
+Access the application at:
+
+- Frontend: `http://localhost:3000`
+- Backend: `http://localhost:5000`
+- MongoDB: `localhost:27017`
+
+### Manual Setup
+
 ### Start MongoDB
 
 Make sure MongoDB is running on your system:
@@ -201,14 +220,14 @@ This approach keeps the application production-ready while maintaining a smooth 
 
 ### Optional (SMTP Configuration)
 
-| Variable        | Description                     | Required |
-| --------------- | ------------------------------- | -------- |
-| `SMTP_HOST`     | SMTP server host                | No       |
-| `SMTP_PORT`     | SMTP server port                | No       |
-| `SMTP_USER`     | SMTP username                   | No       |
-| `SMTP_PASS`     | SMTP password                   | No       |
-| `FROM_NAME`     | Email sender name               | No       |
-| `FROM_EMAIL`    | Email sender address            | No       |
+| Variable     | Description          | Required |
+| ------------ | -------------------- | -------- |
+| `SMTP_HOST`  | SMTP server host     | No       |
+| `SMTP_PORT`  | SMTP server port     | No       |
+| `SMTP_USER`  | SMTP username        | No       |
+| `SMTP_PASS`  | SMTP password        | No       |
+| `FROM_NAME`  | Email sender name    | No       |
+| `FROM_EMAIL` | Email sender address | No       |
 
 If SMTP variables are not provided, password reset emails will be logged to the backend console instead.
 
@@ -222,6 +241,3 @@ If SMTP variables are not provided, password reset emails will be logged to the 
 ## Thanks!
 
 Thanks for checking out my project! If you have any questions or need assistance, feel free to reach out.
-
-
-
