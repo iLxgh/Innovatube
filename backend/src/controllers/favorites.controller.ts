@@ -15,7 +15,7 @@ export const addFavorite = async (req: AuthRequest, res: Response): Promise<void
             return;
         }
 
-        const existing = await Favorite.findOne({ userId, videoId });
+        const existing = await Favorite.findOne({ userId, videoId } as any);
         
         if (existing) {
             res.status(400).json({
@@ -63,7 +63,7 @@ export const removeFavorite = async (req: AuthRequest, res: Response): Promise<v
             return;
         }
 
-        const result = await Favorite.findOneAndDelete({ userId, videoId });
+        const result = await Favorite.findOneAndDelete({ userId, videoId } as any);
 
         if (!result) {
             res.status(404).json({
@@ -140,7 +140,7 @@ export const checkFavorite = async (req: AuthRequest, res: Response): Promise<vo
             return;
         }
 
-        const favorite = await Favorite.findOne({ userId, videoId });
+        const favorite = await Favorite.findOne({ userId, videoId } as any);
 
         res.status(200).json({
             success: true,

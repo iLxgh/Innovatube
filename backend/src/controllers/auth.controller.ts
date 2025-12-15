@@ -115,7 +115,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
         const token = jwt.sign(
             { userId: user._id },
             jwtSecret,
-            { expiresIn: process.env.JWT_EXPIRES_IN || "24h" }
+            { expiresIn: (process.env.JWT_EXPIRES_IN || "24h") as any }
         );
 
         res.status(200).json({
